@@ -36,7 +36,8 @@ data "vsphere_virtual_machine" "template" {
 
 # Resource
 resource "vsphere_virtual_machine" "cloned_virtual_machine" {
-  name = "${var.vsphere_virtual_machine_name}"
+  count = "${var.vsphere_virtual_machine_count}"
+  name = "${var.vsphere_virtual_machine_name}-0${count.index + 1}"
   resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
   datastore_id = "${data.vsphere_datastore.datastore.id}"
   folder = "${var.vsphere_folder}"
@@ -62,15 +63,15 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
 
     customize {
       linux_options {
-        host_name = "${var.vsphere_virtual_machine_name}"
+        host_name = "${var.vsphere_virtual_machine_name}-0${count.index}"
         domain = "${var.linux_options_domain}"
       }
 
-      network_inrface {}
+      network_interface {}
     }
   }
   
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_FORCE_COLOR=1 ANSIBLE_ROLES_PATH=${var.ansible_roles_path} ansible-playbook -u ${var.ansible_usr} -e 'ansible_password=${var.ansible_pwd}' -i '${self.default_ip_address}', ${var.ansible_playbook_dir}/${var.ansible_play}"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_FORCE_COLOR=1 ANSIBLE_ROLES_PATH=${var.ansible_roles_path} ansible-playbook -u ${var.ansible_usr} -e 'ansible_password=${var.ansible_pwd}' -i '${self.default_ip_address}', ${var.ansible_playbook_dir}/${var.ansible_base_playbook}"
   }
 }
