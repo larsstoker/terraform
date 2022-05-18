@@ -63,4 +63,6 @@ variable "ansible_base_playbook" {
 }
 
 # Linux details
-variable "linux_options_domain" {}
+variable "linux_options_domain" {
+  description = "The domain name for this machine."
+}
