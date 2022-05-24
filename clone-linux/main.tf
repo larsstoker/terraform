@@ -71,6 +71,6 @@ resource "vsphere_virtual_machine" "cloned_virtual_machine" {
   }
   
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_FORCE_COLOR=1 ANSIBLE_ROLES_PATH=${var.ansible_roles_path} ansible-playbook -u ${var.ansible_usr} -e 'ansible_password=${var.ansible_pwd}' -i '${self.default_ip_address}', ${var.ansible_playbook_dir}/${var.ansible_base_playbook}"
+    command = "ANSIBLE_CONFIG=${var.ansible_base_dir}/ansible.cfg ansible-playbook -i '${self.default_ip_address}', ${var.ansible_base_dir}/playbooks/${var.ansible_base_playbook}"
   }
 }
