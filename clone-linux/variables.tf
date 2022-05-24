@@ -42,22 +42,10 @@ variable "vsphere_virtual_machine_name" {
 }
 
 # Ansible details
-variable "ansible_usr" {
-  description = "The user ansible uses for SSH/WinRM connections."
-}
 
-variable "ansible_pwd" {
-  description = "The password for the user specified in `ansible_usr`."
+variable "ansible_base_dir" {
+  description = "The absolute path to the ansible directory."
 }
-
-variable "ansible_playbook_dir" {
-  description = "The absolute path to the directory containing the playbooks."
-}
-
-variable "ansible_roles_path" {
-  description = "The absolute path to the directory containing the roles."
-}
-
 variable "ansible_base_playbook" {
   description = "The name of the playbook used to perform basic configuration."
 }
