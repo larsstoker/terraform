@@ -59,6 +59,18 @@ variable "ansible_base_playbook" {
   description = "The relative path to the playbook used to perform basic configuration."
 }
 
+variable "ansible_kube_install_playbook" {
+  description = "The path to the playbook used to install Kubernetes"
+}
+
+variable "ansible_cluster_create_playbook" {
+  description = "The path to the playbook used to create the Kubernetes cluster."
+}
+
+variable "ansible_cluster_join_playbook" {
+  description = "The path to the playbook used to join workers to the Kubernetes cluster."
+}
+
 variable "ansible_additional_playbooks" {
   description = "The relative path(s) to additional playbooks to run."
 }

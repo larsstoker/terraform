@@ -78,15 +78,8 @@ resource "vsphere_virtual_machine" "vm" {
     }
   }
 
-  connection {
-    type     = "ssh"
-    user     = var.ssh_usr
-    password = var.ssh_pwd
-    host     = vsphere_virtual_machine.vm.default_ip_address
-  }
-
   provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_additional_playbooks} /home/lars/projects/automation/ansible/playbooks/kubernetes-cluster-join.yml"
+    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_kube_install_playbook} ${var.ansible_cluster_join_playbook} ${var.ansible_additional_playbooks}"
   }
 }
 
