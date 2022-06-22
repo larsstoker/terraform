@@ -86,13 +86,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_additional_playbooks}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sleep 10"
-    ]
+    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_additional_playbooks} /home/lars/projects/automation/ansible/playbooks/kubernetes-cluster-join.yml"
   }
 }
 
