@@ -86,30 +86,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_additional_playbooks}"
-  }
-
-  provisioner "file" {
-    source = "../ClusterConfiguration"
-    destination = "/tmp/ClusterConfiguration"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "cd ~/",
-      "sudo kubeadm config print init-defaults | tee ClusterConfiguration.yaml",
-      "sudo sed -i '/name/d' ClusterConfiguration.yaml",
-      "sudo sed -i 's/ advertiseAddress: 1.2.3.4/ advertiseAddress: 10.0.20.61/' ClusterConfiguration.yaml",
-      "sudo sed -i 's/ criSocket: \\/var\\/run\\/dockershim\\.sock/ criSocket: \\/run\\/containerd\\/containerd\\.sock/' ClusterConfiguration.yaml",
-      "sudo cat /tmp/ClusterConfiguration >> ClusterConfiguration.yaml",
-      "sudo kubeadm init --config=ClusterConfiguration.yaml",
-      "mkdir -p $HOME/.kube",
-      "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config",
-      "sudo chown $(id -u):$(id -g) $HOME/.kube/config",
-      "kubectl create -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml",
-      "kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml",
-      "sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config"
-    ]
+    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', --extra-vars 'master_ip=${self.default_ip_address}' ${var.ansible_base_playbook} ${var.ansible_additional_playbooks} /home/lars/projects/automation/ansible/playbooks/kubernetes-cluster-create.yml"
   }
 }
 
