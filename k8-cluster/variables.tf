@@ -29,8 +29,12 @@ variable "vsphere_datastore" {
   description = "The name of the datastore."
 }
 
-variable "vsphere_network" {
-  description = "The name of the network."
+variable "vsphere_vm_network" {
+  description = "The name of vm the network."
+}
+
+variable "vsphere_storage_network" {
+  description = "The name of storage the network."
 }
 
 variable "vsphere_template" {
@@ -55,7 +59,7 @@ variable "ansible_config" {
   description = "The path to the ansible config file."
 }
 
-variable "ansible_base_playbook" {
+variable "ansible_base_playbooks" {
   description = "The relative path to the playbook used to perform basic configuration."
 }
 
