@@ -24,8 +24,13 @@ data "vsphere_folder" "folder" {
   path = "${var.vsphere_datacenter}/vm/${var.vsphere_folder}"
 }
 
-data "vsphere_network" "network" {
-  name          = var.vsphere_network
+data "vsphere_network" "vm_network" {
+  name          = var.vsphere_vm_network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "storage_network" {
+  name          = var.vsphere_storage_network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -40,15 +45,21 @@ resource "vsphere_virtual_machine" "vm" {
   name             = "VNLHPROD-K8M01"
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
+  folder           = var.vsphere_folder
 
-  num_cpus = 4
-  memory   = 4096
+  num_cpus = 6
+  memory   = 8192
   guest_id = data.vsphere_virtual_machine.template.guest_id
 
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
 
   network_interface {
-    network_id   = data.vsphere_network.network.id
+    network_id   = data.vsphere_network.vm_network.id
+    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+  }
+
+  network_interface {
+    network_id   = data.vsphere_network.storage_network.id
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
@@ -73,13 +84,23 @@ resource "vsphere_virtual_machine" "vm" {
         ipv4_netmask = 24
       }
 
-      ipv4_gateway = "10.0.20.1"
+      network_interface {
+        ipv4_address = "10.0.111.61"
+        ipv4_netmask = 24
+      }
+
+      ipv4_gateway    = "10.0.20.1"
       dns_server_list = var.dns_server_list
     }
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', --extra-vars 'master_ip=${self.default_ip_address}' ${var.ansible_base_playbook} ${var.ansible_kube_install_playbook} ${var.ansible_cluster_create_playbook} ${var.ansible_additional_playbooks}"
+    command = "rm /tmp/kubernetes_join_command"
+    on_failure = continue
+  }
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', --extra-vars 'master_ip=${self.default_ip_address} master_host=vnlhprod-k8m01.${var.linux_options_domain} ifname=ens192 mtu=9000' ${var.ansible_base_playbooks} ${var.ansible_kube_install_playbook} ${var.ansible_cluster_create_playbook} ${var.ansible_additional_playbooks}"
   }
 }
 
