@@ -4,7 +4,8 @@ module "VNLHPROD-K8M01" {
   vsphere_usr                     = var.vsphere_usr
   vsphere_pwd                     = var.vsphere_pwd
   vsphere_datacenter              = var.vsphere_datacenter
-  vsphere_network                 = var.vsphere_network
+  vsphere_vm_network              = var.vsphere_vm_network
+  vsphere_storage_network         = var.vsphere_storage_network
   vsphere_template                = var.vsphere_template
   vsphere_folder                  = var.vsphere_folder
   vsphere_resource_pool           = var.vsphere_resource_pool
@@ -13,7 +14,7 @@ module "VNLHPROD-K8M01" {
   ssh_pwd                         = var.ssh_pwd
   ansible_usr                     = var.ansible_usr
   ansible_config                  = var.ansible_config
-  ansible_base_playbook           = var.ansible_base_playbook
+  ansible_base_playbooks           = var.ansible_base_playbooks
   ansible_kube_install_playbook   = var.ansible_kube_install_playbook
   ansible_cluster_create_playbook = var.ansible_cluster_create_playbook
   ansible_cluster_join_playbook   = var.ansible_cluster_join_playbook
@@ -28,7 +29,8 @@ module "VNLHPROD-K8W01" {
   vsphere_usr                     = var.vsphere_usr
   vsphere_pwd                     = var.vsphere_pwd
   vsphere_datacenter              = var.vsphere_datacenter
-  vsphere_network                 = var.vsphere_network
+  vsphere_vm_network              = var.vsphere_vm_network
+  vsphere_storage_network         = var.vsphere_storage_network
   vsphere_template                = var.vsphere_template
   vsphere_folder                  = var.vsphere_folder
   vsphere_resource_pool           = var.vsphere_resource_pool
@@ -37,7 +39,7 @@ module "VNLHPROD-K8W01" {
   ssh_pwd                         = var.ssh_pwd
   ansible_usr                     = var.ansible_usr
   ansible_config                  = var.ansible_config
-  ansible_base_playbook           = var.ansible_base_playbook
+  ansible_base_playbooks           = var.ansible_base_playbooks
   ansible_kube_install_playbook   = var.ansible_kube_install_playbook
   ansible_cluster_create_playbook = var.ansible_cluster_create_playbook
   ansible_cluster_join_playbook   = var.ansible_cluster_join_playbook
@@ -52,7 +54,8 @@ module "VNLHPROD-K8W02" {
   vsphere_usr                     = var.vsphere_usr
   vsphere_pwd                     = var.vsphere_pwd
   vsphere_datacenter              = var.vsphere_datacenter
-  vsphere_network                 = var.vsphere_network
+  vsphere_vm_network              = var.vsphere_vm_network
+  vsphere_storage_network         = var.vsphere_storage_network
   vsphere_template                = var.vsphere_template
   vsphere_folder                  = var.vsphere_folder
   vsphere_resource_pool           = var.vsphere_resource_pool
@@ -61,7 +64,7 @@ module "VNLHPROD-K8W02" {
   ssh_pwd                         = var.ssh_pwd
   ansible_usr                     = var.ansible_usr
   ansible_config                  = var.ansible_config
-  ansible_base_playbook           = var.ansible_base_playbook
+  ansible_base_playbooks           = var.ansible_base_playbooks
   ansible_kube_install_playbook   = var.ansible_kube_install_playbook
   ansible_cluster_create_playbook = var.ansible_cluster_create_playbook
   ansible_cluster_join_playbook   = var.ansible_cluster_join_playbook
@@ -76,7 +79,8 @@ module "VNLHPROD-K8W03" {
   vsphere_usr                     = var.vsphere_usr
   vsphere_pwd                     = var.vsphere_pwd
   vsphere_datacenter              = var.vsphere_datacenter
-  vsphere_network                 = var.vsphere_network
+  vsphere_vm_network              = var.vsphere_vm_network
+  vsphere_storage_network         = var.vsphere_storage_network
   vsphere_template                = var.vsphere_template
   vsphere_folder                  = var.vsphere_folder
   vsphere_resource_pool           = var.vsphere_resource_pool
@@ -85,7 +89,7 @@ module "VNLHPROD-K8W03" {
   ssh_pwd                         = var.ssh_pwd
   ansible_usr                     = var.ansible_usr
   ansible_config                  = var.ansible_config
-  ansible_base_playbook           = var.ansible_base_playbook
+  ansible_base_playbooks           = var.ansible_base_playbooks
   ansible_kube_install_playbook   = var.ansible_kube_install_playbook
   ansible_cluster_create_playbook = var.ansible_cluster_create_playbook
   ansible_cluster_join_playbook   = var.ansible_cluster_join_playbook
