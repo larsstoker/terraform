@@ -24,8 +24,13 @@ data "vsphere_folder" "folder" {
   path = "${var.vsphere_datacenter}/vm/${var.vsphere_folder}"
 }
 
-data "vsphere_network" "network" {
-  name          = var.vsphere_network
+data "vsphere_network" "vm_network" {
+  name          = var.vsphere_vm_network
+  datacenter_id = data.vsphere_datacenter.dc.id
+}
+
+data "vsphere_network" "storage_network" {
+  name          = var.vsphere_storage_network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -40,6 +45,7 @@ resource "vsphere_virtual_machine" "vm" {
   name             = "VNLHPROD-K8W03"
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
+  folder           = var.vsphere_folder
 
   num_cpus = 4
   memory   = 4096
@@ -48,10 +54,14 @@ resource "vsphere_virtual_machine" "vm" {
   scsi_type = data.vsphere_virtual_machine.template.scsi_type
 
   network_interface {
-    network_id   = data.vsphere_network.network.id
+    network_id   = data.vsphere_network.vm_network.id
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
+  network_interface {
+    network_id   = data.vsphere_network.storage_network.id
+    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
+  }
   disk {
     label            = "disk0"
     size             = data.vsphere_virtual_machine.template.disks.0.size
@@ -72,6 +82,10 @@ resource "vsphere_virtual_machine" "vm" {
         ipv4_address = "10.0.20.66"
         ipv4_netmask = 24
       }
+      network_interface {
+        ipv4_address = "10.0.111.66"
+        ipv4_netmask = 24
+      }
 
       ipv4_gateway    = "10.0.20.1"
       dns_server_list = var.dns_server_list
@@ -79,7 +93,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', ${var.ansible_base_playbook} ${var.ansible_kube_install_playbook} ${var.ansible_cluster_join_playbook} ${var.ansible_additional_playbooks}"
+    command = "ANSIBLE_CONFIG=${var.ansible_config} ansible-playbook -u ${var.ansible_usr} -i '${self.default_ip_address}', --extra-vars 'ifname=ens192 mtu=9000' ${var.ansible_base_playbooks} ${var.ansible_kube_install_playbook} ${var.ansible_cluster_join_playbook} ${var.ansible_additional_playbooks}"
   }
 }
 
